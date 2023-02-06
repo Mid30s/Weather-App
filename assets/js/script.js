@@ -1,27 +1,49 @@
-var city = "sydney";
+var city = " "
 var apiKey = "526f2afa46f129ea5281fa05cd6f66f8";
 
 
+
 //test api
-function getApi() {
+function getApi(city) {
   
   var requestUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiKey +"&units=metric";
 
   fetch(requestUrl)
     .then(function (response) {
-      return response.json();
-    })
+      if (response.status === 200) {
+        // save city in local storage if city is valid
+        let savedCities = JSON.parse(localStorage.getItem("savedCities")) || [];
+        if (!savedCities.includes(city.toUpperCase())) {
+          savedCities.push(city.toUpperCase());
+          localStorage.setItem("savedCities", JSON.stringify(savedCities));
+         
+        }
+        searchHistory();
+        return response.json();
+        
+      }
+    }
+    )
+    
     .then(function (data) {
         console.log(data);
-
-        // create variables
+      
+      // create variables
        var lat = JSON.stringify(data.coord.lat);
        var lon = JSON.stringify(data.coord.lon)
      
         displayCurrent(data);
         displayForecast(lat,lon);
+       
       
+    })
+    .catch(function (error) {
+      console.error(error);
+      window.location.reload();
     });
+    
+   
+      
 }
 
 
@@ -38,7 +60,7 @@ function displayCurrent(data){
     document.querySelector(".icon").src =
       "https://openweathermap.org/img/wn/" + icon + "@2x.png";
     document.querySelector(".description").innerText = description;
-    document.querySelector(".temp").innerText = temp + "°C";
+    document.querySelector(".temp").innerText = Math.round(temp) + "°C";
     document.querySelector(".humidity").innerText =
       "Humidity: " + humidity + "%";
     document.querySelector(".wind").innerText =
@@ -73,7 +95,7 @@ function displayForecast(lat,lon){
             console.log(date,iconUrl,temp,wind,humidity);         
             $("#card-date-" + (i + 1)).html(date);
             $("#card-icon-" + (i + 1)).html("<img src=" + iconUrl + ">");
-            $("#card-temp-" + (i + 1)).html(temp + "°C");
+            $("#card-temp-" + (i + 1)).html(Math.round(temp) + "°C");
             $("#card-wind-" + (i + 1)).html(Math.round(wind*3.6) + "km/h");
             $("#card-humid-" + (i + 1)).html(humidity + "%");
         }
@@ -81,18 +103,42 @@ function displayForecast(lat,lon){
     });
 
 };
-    
+
+
+//display local storage
+function searchHistory() {
+  var searchList = document.querySelector('#search-history-list');
+  var listLength = searchList.children.length;
+  if (listLength != 0) {
+    for (i = 0; i < listLength; i++) {
+      searchList.removeChild(searchList.children[0]);
+    }
+  }
+  let city = [];
+  city = JSON.parse(localStorage.getItem('savedCities'));
+  if (city != null) {
+    for (var i = 0; i < city.length; i++) {
+      var data = city[i];
+      var item = $("<button>" + data + "</button>");
+      $(item).attr("class", "options-box");
+      $(item).attr("data-value", data);
+      $("#search-history-list").append(item);
+    }
+  }
+}
 
 
 
-
-
-// use input text city-name to get api
-function searchCity(event) {
+// use input text city to get api
+function submitFunction(event) {
     event.preventDefault();
-    if ($("#city-name").val().trim() !== "") {
-        city = $("#city-name").val().trim();
-        getApi();
+    if ($("#city-name").val() !== "") {
+        let city = $("#city-name").val();
+        getApi(city);
+       
+        
+
+      
     } else {
             alert ("Please enter a city name to search")
         }; 
@@ -100,17 +146,10 @@ function searchCity(event) {
 };
 
 
-    // var listEl = $("<button>" + c.toUpperCase() + "</button>");
-    // $(listEl).attr("class", "options-box");
-    // $(listEl).attr("data-value", c.toUpperCase());
-    // $("#user-history-list").append(listEl);
-
 //add button click function
-$("#searchButton").on("click", searchCity);
+$("#searchButton").on("click", submitFunction);
 
-/*loading page default city is sydney*/
 function init() {
-  getApi();
-}
-
+  searchHistory();
+};
 init();
