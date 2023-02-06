@@ -15,7 +15,6 @@ function getApi() {
         console.log(data);
 
         // create variables
-
        var lat = JSON.stringify(data.coord.lat);
        var lon = JSON.stringify(data.coord.lon)
      
@@ -32,9 +31,7 @@ function displayCurrent(data){
     const { icon, description } = data.weather[0];
     const { temp, humidity } = data.main;
     const { speed } = data.wind;
-    // var {lat} = data.coord;
-    // var {lon} = data.coord;
-   
+    //test
     console.log(name,icon,description,temp,humidity,speed);
 
     document.querySelector(".city").innerText = "Now in " + name;
@@ -50,7 +47,40 @@ function displayCurrent(data){
 }
     
 
+function displayForecast(lat,lon){
+    //test lat+lon
+    console.log(lat,lon);
+    var forecastUrl ="https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" +lon + "&appid=" + apiKey +"&units=metric";
+    fetch(forecastUrl)
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data);
+        
+        // use filter method to choose property include the string 06:00:00
+        var newData = data.list.filter((e) => e.dt_txt.includes('06:00:00'));
+        //test new data
+        console.log(newData);
 
+        for (i = 0; i < 5; i++) {
+            var date = new Date(newData[i].dt*1000).toLocaleDateString();
+            var iconUrl = "https://openweathermap.org/img/wn/" + newData[i].weather[0].icon + ".png";
+            var temp = newData[i].main.temp;
+            var wind = newData[i].wind.speed;
+            var humidity = newData[i].main.humidity;
+            //test
+            console.log(date,iconUrl,temp,wind,humidity);         
+            $("#card-date-" + (i + 1)).html(date);
+            $("#card-icon-" + (i + 1)).html("<img src=" + iconUrl + ">");
+            $("#card-temp-" + (i + 1)).html(temp + "°C");
+            $("#card-wind-" + (i + 1)).html(Math.round(wind*3.6) + "km/h");
+            $("#card-humid-" + (i + 1)).html(humidity + "%");
+        }
+       
+    });
+
+};
     
 
 
@@ -65,8 +95,22 @@ function searchCity(event) {
         getApi();
     } else {
             alert ("Please enter a city name to search")
-        };    
+        }; 
+
 };
+
+
+    // var listEl = $("<button>" + c.toUpperCase() + "</button>");
+    // $(listEl).attr("class", "options-box");
+    // $(listEl).attr("data-value", c.toUpperCase());
+    // $("#user-history-list").append(listEl);
 
 //add button click function
 $("#searchButton").on("click", searchCity);
+
+/*loading page default city is sydney*/
+function init() {
+  getApi();
+}
+
+init();
