@@ -15,10 +15,12 @@
   height: auto;
 }
 
+/* style weather description in current day*/ 
 .description {
   text-transform: capitalize;
 }
 
+/*add margin for search history button*/
 #search-history-list button {
   margin-top: 10px;
 }

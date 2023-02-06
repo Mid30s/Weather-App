@@ -1,11 +1,8 @@
 var city = " "
 var apiKey = "526f2afa46f129ea5281fa05cd6f66f8";
 
-
-
-//test api
+//use city to get current weather API
 function getApi(city) {
-  
   var requestUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiKey +"&units=metric";
 
   fetch(requestUrl)
@@ -15,12 +12,10 @@ function getApi(city) {
         let savedCities = JSON.parse(localStorage.getItem("savedCities")) || [];
         if (!savedCities.includes(city.toUpperCase())) {
           savedCities.push(city.toUpperCase());
-          localStorage.setItem("savedCities", JSON.stringify(savedCities));
-         
+          localStorage.setItem("savedCities", JSON.stringify(savedCities));  
         }
         searchHistory();
-        return response.json();
-        
+        return response.json();      
       }
     }
     )
@@ -32,18 +27,15 @@ function getApi(city) {
        var lat = JSON.stringify(data.coord.lat);
        var lon = JSON.stringify(data.coord.lon)
      
-        displayCurrent(data);
-        displayForecast(lat,lon);
+      displayCurrent(data);
+      displayForecast(lat,lon);
        
       
     })
     .catch(function (error) {
       console.error(error);
       window.location.reload();
-    });
-    
-   
-      
+    });     
 }
 
 
@@ -67,9 +59,9 @@ function displayCurrent(data){
     document.querySelector(".wind").innerText =
       "Wind speed: " + Math.round(speed*3.6) + "km/h";
 
-}
-    
+}   
 
+// use lat+lon to get 5 days forecast api
 function displayForecast(lat,lon){
     //test lat+lon
     console.log(lat,lon);
@@ -79,43 +71,39 @@ function displayForecast(lat,lon){
         return response.json();
     })
     .then(function (data) {
-        console.log(data);
-        
-        // use filter method to choose property include the string 06:00:00
-        var newData = data.list.filter((e) => e.dt_txt.includes('06:00:00'));
-        //test new data
-        console.log(newData);
+      console.log(data);
+      // use filter method to choose property include the string 06:00:00
+      var newData = data.list.filter((e) => e.dt_txt.includes('06:00:00'));
+      //test new data
+      console.log(newData);
 
-        for (i = 0; i < 5; i++) {
-            var date = new Date(newData[i].dt*1000).toLocaleDateString();
-            var iconUrl = "https://openweathermap.org/img/wn/" + newData[i].weather[0].icon + ".png";
-            var temp = newData[i].main.temp;
-            var wind = newData[i].wind.speed;
-            var humidity = newData[i].main.humidity;
-            //test
-            console.log(date,iconUrl,temp,wind,humidity);         
-            $("#card-date-" + (i + 1)).html(date);
-            $("#card-icon-" + (i + 1)).html("<img src=" + iconUrl + ">");
-            $("#card-temp-" + (i + 1)).html(Math.round(temp) + "°C");
-            $("#card-wind-" + (i + 1)).html(Math.round(wind*3.6) + "km/h");
-            $("#card-humid-" + (i + 1)).html(humidity + "%");
-        }
-       
+      for (i = 0; i < 5; i++) {
+        var date = new Date(newData[i].dt*1000).toLocaleDateString();
+        var iconUrl = "https://openweathermap.org/img/wn/" + newData[i].weather[0].icon + ".png";
+        var temp = newData[i].main.temp;
+        var wind = newData[i].wind.speed;
+        var humidity = newData[i].main.humidity;
+        //test
+        console.log(date,iconUrl,temp,wind,humidity);         
+        $("#card-date-" + (i + 1)).html(date);
+        $("#card-icon-" + (i + 1)).html("<img src=" + iconUrl + ">");
+        $("#card-temp-" + (i + 1)).html(Math.round(temp) + "°C");
+        $("#card-wind-" + (i + 1)).html(Math.round(wind*3.6) + "km/h");
+        $("#card-humid-" + (i + 1)).html(humidity + "%");
+      }
     });
-
 };
 
-
-
-
+//display local storage and create button for history search
 function searchHistory() {
   const cities = JSON.parse(localStorage.getItem('savedCities'));
   if (cities !== null) {
     $("#search-history-list").html("");
-    for (let city of cities){
-      const button = $('<button></button>').text(city);
+    for (let i = 0; i < cities.length; i++){
+      const button = document.createElement("button");
+      button.innerText = cities[i];
       $(button).on('click', (event) => {
-        $("#city-name").val($(button).text());
+        document.querySelector("#city-name").value = cities[i];
         submitFunction(event);
       });
       $("#search-history-list").append(button);
@@ -123,24 +111,16 @@ function searchHistory() {
   }
 };
 
-
-
-
-
-
 // use input text city to get api
 function submitFunction(event) {
     event.preventDefault();
     if ($("#city-name").val() !== "") {
         let city = $("#city-name").val();
-        getApi(city);
-            
+        getApi(city);           
     } else {
             alert ("Please enter a city name to search")
         }; 
-
 };
-
 
 //add button click function
 $("#searchButton").on("click", submitFunction);
