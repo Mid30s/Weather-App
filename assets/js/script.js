@@ -50,13 +50,14 @@ function getApi(city) {
 function displayCurrent(data){
     //Destructuring assignment to get out a data
     const { name } = data;
+    const { dt } = data;
     const { icon, description } = data.weather[0];
     const { temp, humidity } = data.main;
     const { speed } = data.wind;
     //test
-    console.log(name,icon,description,temp,humidity,speed);
+    console.log(name,icon,description,temp,humidity,speed,dt);
 
-    document.querySelector(".city").innerText = "Now in " + name;
+    document.querySelector(".city").innerText = "Now in " + name + "      " + new Date(dt * 1000).toLocaleDateString();
     document.querySelector(".icon").src =
       "https://openweathermap.org/img/wn/" + icon + "@2x.png";
     document.querySelector(".description").innerText = description;
@@ -105,27 +106,25 @@ function displayForecast(lat,lon){
 };
 
 
-//display local storage
+
+
 function searchHistory() {
-  var searchList = document.querySelector('#search-history-list');
-  var listLength = searchList.children.length;
-  if (listLength != 0) {
-    for (i = 0; i < listLength; i++) {
-      searchList.removeChild(searchList.children[0]);
+  const cities = JSON.parse(localStorage.getItem('savedCities'));
+  if (cities !== null) {
+    $("#search-history-list").html("");
+    for (let city of cities){
+      const button = $('<button></button>').text(city);
+      $(button).on('click', (event) => {
+        $("#city-name").val($(button).text());
+        submitFunction(event);
+      });
+      $("#search-history-list").append(button);
     }
   }
-  let city = [];
-  city = JSON.parse(localStorage.getItem('savedCities'));
-  if (city != null) {
-    for (var i = 0; i < city.length; i++) {
-      var data = city[i];
-      var item = $("<button>" + data + "</button>");
-      $(item).attr("class", "options-box");
-      $(item).attr("data-value", data);
-      $("#search-history-list").append(item);
-    }
-  }
-}
+};
+
+
+
 
 
 
@@ -135,10 +134,7 @@ function submitFunction(event) {
     if ($("#city-name").val() !== "") {
         let city = $("#city-name").val();
         getApi(city);
-       
-        
-
-      
+            
     } else {
             alert ("Please enter a city name to search")
         }; 
@@ -149,6 +145,7 @@ function submitFunction(event) {
 //add button click function
 $("#searchButton").on("click", submitFunction);
 
+//loading page
 function init() {
   searchHistory();
 };
