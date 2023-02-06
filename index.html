@@ -20,16 +20,16 @@
         </div>
     </div>
 
-    <main class="container">
-        <div class="columns py-3">
+    <main class="container ">
+        <div class="columns mt-3">
             <div class="column is-one-fifth ">
                 <h2 class="mb-2 title is-size-4">Search for a City</h2>
                 <div class="field has-addons is-flex-direction-column">                   
                     <div class="control">
-                      <input class="input" type="text" placeholder="Adelaide">
+                      <input class="input" type="text" id="city-name" placeholder="Search City">
                     </div>
                     <div class="control mt-2 ">
-                      <a class="button is-info is-flex is-justify-content-center">
+                      <a class="button is-info is-flex is-justify-content-center" id="searchButton">
                         <i class="fa-solid fa-magnifying-glass mr-1"></i>
                         Search
                       </a>
@@ -54,12 +54,12 @@
                 <div class="container top-container">
                     <div class="card px-2 py-2 has-background-success">
                         <div class="weather loading">
-                            <h2 class="city">Weather in Adelaide</h2>
+                            <h2 class="city has-text-weight-bold">Now in Adelaide</h2>
                             <h1 class="temp">21°C</h1>
-                            <div class="flex">
-                              <img src="https://openweathermap.org/img/wn/04n.png" alt="" class="icon" />
-                              <div class="description">Cloudy</div>
-                            </div>
+                            
+                            <img src="https://openweathermap.org/img/wn/04n@2x.png" alt="icon.png" class="icon" />
+                            <div class="description has-text-weight-bold">Cloudy</div>
+                            
                             <div class="humidity">Humidity: 60%</div>
                             <div class="wind">Wind speed: 6.2 km/h</div>
                         </div>
