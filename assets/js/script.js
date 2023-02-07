@@ -46,10 +46,12 @@ function displayCurrent(data){
     const { icon, description } = data.weather[0];
     const { temp, humidity } = data.main;
     const { speed } = data.wind;
+    const {country} = data.sys;
     //test
     console.log(name,icon,description,temp,humidity,speed,dt);
 
     document.querySelector(".city").innerText = "Now in " + name + "      " + new Date(dt * 1000).toLocaleDateString();
+    document.querySelector(".country").innerText = country
     document.querySelector(".icon").src =
       "https://openweathermap.org/img/wn/" + icon + "@2x.png";
     document.querySelector(".description").innerText = description;
@@ -72,7 +74,7 @@ function displayForecast(lat,lon){
     })
     .then(function (data) {
       console.log(data);
-      // use filter method to choose property include the string 06:00:00
+      // use filter method to choose 5 property include the string 06:00:00
       var newData = data.list.filter((e) => e.dt_txt.includes('06:00:00'));
       //test new data
       console.log(newData);

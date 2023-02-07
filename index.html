@@ -14,6 +14,7 @@
     <title>Weather-App</title>
 
 <body class="has-background-primary-light"> 
+    <!-- header -->
     <div class="container is-fluid px-0">
         <div class="navbar is-info is-justify-content-center">
          <h1 class="title is-3 my-5 py-3 has-text-white">Weather App Dashboard</h1> 
@@ -22,8 +23,10 @@
 
     <main class="container ">
         <div class="columns mt-3">
+             <!-- left side container -->
             <div class="column is-one-fifth ">
                 <h2 class="mb-2 title is-size-4">Search for a City</h2>
+                 <!-- search bar -->
                 <div class="field has-addons is-flex-direction-column">                   
                     <div class="control">
                       <input class="input" type="text" id="city-name" placeholder="Search City">
@@ -35,7 +38,7 @@
                       </a>
                     </div>
                 </div>
-
+                  <!-- search history button -->
                 <div class="searchHistory">
 
                     <h2 class="title is-size-4 mt-3">
@@ -48,12 +51,14 @@
 
                 </div>
             </div>
-
+              
+             <!-- right side container -->
             <div class="column">
+                 <!-- top container to display current day weather -->
                 <div class="container top-container">
                     <div class="card px-2 py-2 has-background-success">
                         <div class="weather loading">
-                            <h2 class="city has-text-weight-bold"></h2>
+                            <h2 class="city has-text-weight-bold"></h2> <sup class="country"></sup>
                             <h1 class="temp"></h1>
                             
                             <img src="https://openweathermap.org/img/wn/04n@2x.png" alt="icon.png" class="icon" />
@@ -63,16 +68,16 @@
                             <div class="wind"></div>
                         </div>
                     </div>
-
-
                 </div>
 
                 <div>
                     <h2 class="title is-size-5 my-5">5-Days Forecast</h2>
                 </div>
 
-                <div class="container bottom-container is-flex is-flex-wrap-wrap is-justify-content-space-between">
+                <!-- bottom container to display forecast 5 days weather -->
 
+                <div class="container bottom-container is-flex is-flex-wrap-wrap is-justify-content-space-between">
+                    <!-- create 5 cards for 5 days -->
                     <div class="card forecastCard px-5 py-3 mx-3 my-3 has-background-success">
                         <h4 id="card-date-1" class="subtitle is-5 has-text-weight-bold">
                             
